@@ -1,19 +1,24 @@
-# btdigg
-[![NPM version](https://img.shields.io/npm/v/btdigg.svg?style=flat)](https://www.npmjs.org/package/btdigg)
+# btdigg.userscript.js
 
-
+> A userscript for btdigg.org.
 
 ------
 
 ## Installation
 
-```bash
-$ npm install btdigg
-```
+* __Chrome__: install <a href="https://chrome.google.com/webstore/detail/dhdgffkkebhmkfjojejmpbldmpobfkfo">the Tampermonkey extension</a> first
 
-## Example
+<h3>
+===============
+<a href="https://github.com/lisposter/btdigg.userscript.js/raw/master/btdigg.userscript.js">
+    Install the script
+</a> 
+===============
+</h3>
 
-## Usage
+## Note
+
+This project is not associcated with btdigg.org, and you should NOT download pirated stuffs.
 
 ## License
 

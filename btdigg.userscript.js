@@ -1,6 +1,6 @@
 // ==UserScript==
-// @name         btdigg.org bulk copy
-// @namespace    http://zhu.li/
+// @name         Bulk copy the selected magnet links in btdigg.org
+// @homepageURL  https://github.com/lisposter/btdigg.userscript.js
 // @version      0.1
 // @description  fast select and copy magnet
 // @author       Leigh Zhu
@@ -9,55 +9,53 @@
 // ==/UserScript==
 
 ;(function(window, document) {
-    var magentLinks = Array.prototype.slice.call(document.querySelectorAll('a[href^=magnet]'))
-        .map(function(itm) {
-            return itm.href;
-        });
-    var selectedLinks = [];
 
-    function parseLinks(links) {
-        return links.map(function(itm) {
-            var params = {};
-            itm.split('?')[1].split('&').forEach(function(kv) {
-                var tmp = {};
-                params[kv.split('=')[0]] = kv.split('=')[1];
-            });
-
-            return {
-                dn: decodeURIComponent(params.dn || ''),
-                magnet: itm
-            }
-        })
+  Node.prototype.prependChild = function(el) {
+    if (this.childNodes[0]) {
+      this.insertBefore(el, this.childNodes[0]);
+    } else {
+      this.appendChild(el);
     }
+  };
 
-    function createList() {
-        var tpl1 =  '<table>';
-        var tpl2 =  '</table>' +
-                    '<textarea rows="6" cols="100"></textarea>';
+  document.querySelector('body').innerHTML = document.querySelector('body').innerHTML +
+    '<div id="links-panel" style="position: fixed;top: 10%;right: 2%;box-shadow: 0 5px 10px #ddd;border: 1px solid #02a3c6;">' +
+      '<textarea id="magnet-links" cols="100" rows="10" style="border: 1px solid #f8f8f8;background: rgba(230, 230, 230, .9)"></textarea>' +
+    '</div>';
 
-        var box = document.createElement('div');
-        box.setAttribute('id', 'linksBox');
 
-        var tableStr = parseLinks(magentLinks).reduce(function(memo, curr) {
-            return memo + '<tr><td><input type="checkbox" data-magnet="' + curr.magnet + '"></td><td>' + curr.dn + '</td></tr>';
-        }, tpl1);
-        box.innerHTML = tableStr + tpl2;
-        document.querySelector('body').appendChild(box);
+  var magentLinks = Array.prototype.slice.call(document.querySelectorAll('a[href^=magnet]'))
+    .map(function(itm) {
+      return itm.href;
+    });
+  var selectedLinks = [];
 
-        Array.prototype.slice.call(box.querySelectorAll('input')).forEach(function(ipt) {
-            ipt.addEventListener('change', function(e) {
-                if (e.target.checked === true) {
-                    selectedLinks.push(e.target.dataset.magnet);
-                } else {
-                    selectedLinks.splice(selectedLinks.indexOf(e.target.dataset.magnet), 1);
-                }
+  function addCheckboxs() {
+    var magnetlinks = document.getElementById('magnet-links');
+    Array.prototype.slice.call(document.querySelectorAll('.torrent_name'))
+      .forEach(function(el) {
+        var hash = /info_hash=(.+)(&q=.+)/.exec(el.querySelector('a').href)[1];
+        var magnet = magentLinks.filter(function(link) {
+          return link.indexOf(hash) >= 0;
+        })[0];
 
-                box.querySelector('textarea').value = selectedLinks.join('\n');
-            }, false);
+        var ipt = document.createElement('input');
+        ipt.setAttribute('type', 'checkbox');
+        ipt.style.fontSize = '100%';
+        ipt.style.marginRight = '.5em';
+        ipt.addEventListener('change', function(e) {
+          if (e.target.checked === true) {
+            selectedLinks.push(magnet);
+          } else {
+            selectedLinks.splice(selectedLinks.indexOf(magnet), 1);
+          }
+          magnetlinks.value = selectedLinks.join('\n');
         });
-    }
 
-    createList();
+        el.prependChild(ipt);
+      });
+  }
 
+  addCheckboxs();
 
 })(window, document);
