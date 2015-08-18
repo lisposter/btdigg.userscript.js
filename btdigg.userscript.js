@@ -23,6 +23,8 @@
       '<textarea id="magnet-links" cols="100" rows="10" style="border: 1px solid #f8f8f8;background: rgba(230, 230, 230, .9)"></textarea>' +
     '</div>';
 
+  var linksBox = document.getElementById('magnet-links');
+  linksBox.value = localStorage.getItem('links') || '';
 
   var magentLinks = Array.prototype.slice.call(document.querySelectorAll('a[href^=magnet]'))
     .map(function(itm) {
@@ -31,7 +33,6 @@
   var selectedLinks = [];
 
   function addCheckboxs() {
-    var magnetlinks = document.getElementById('magnet-links');
     Array.prototype.slice.call(document.querySelectorAll('.torrent_name'))
       .forEach(function(el) {
         var hash = /info_hash=(.+)(&q=.+)/.exec(el.querySelector('a').href)[1];
@@ -49,7 +50,8 @@
           } else {
             selectedLinks.splice(selectedLinks.indexOf(magnet), 1);
           }
-          magnetlinks.value = selectedLinks.join('\n');
+          linksBox.value = (linksBox.value || '') + selectedLinks.join('\n');
+          localStorage.setItem('links', linksBox.value);
         });
 
         el.prependChild(ipt);
