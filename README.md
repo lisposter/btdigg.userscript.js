@@ -2,6 +2,8 @@
 
 > A userscript for btdigg.org.
 
+When searching in [btdigg](btdigg.org), you can select items by the checkboxs, and your selected items' magnet links will be in the textarea box in the top right, so you can simplily copy them all.
+
 ------
 
 ## Installation
@@ -18,7 +20,7 @@
 
 ## Note
 
-This project is not associcated with btdigg.org, and you should NOT download pirated stuffs.
+This project is not associcated with btdigg.org, and you should NOT download pirated stuffs and DO NOT pirated anything.
 
 ## License
 
