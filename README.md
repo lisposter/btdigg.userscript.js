@@ -24,4 +24,4 @@ This project is not associcated with btdigg.org, and you should NOT download pir
 
 ## License
 
- © [Leigh Zhu](#)
+MIT © [Leigh Zhu](#)
