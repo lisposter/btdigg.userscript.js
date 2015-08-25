@@ -18,7 +18,15 @@
     }
   };
 
-  document.querySelector('body').innerHTML = document.querySelector('body').innerHTML +
+  function $(query) {
+    return document.querySelector(query);
+  }
+
+  $.all = function (query) {
+    return document.querySelectorAll(query);
+  }
+
+  $('body').innerHTML = $('body').innerHTML +
     '<div id="links-panel">' +
       '<button id="btn-reset"> Reset </button>' +
       '<textarea id="magnet-links" cols="100" rows="10"></textarea>' +
@@ -27,14 +35,14 @@
   var linksBox = document.getElementById('magnet-links');
   linksBox.value = localStorage.getItem('links') || '';
 
-  var magentLinks = Array.prototype.slice.call(document.querySelectorAll('a[href^=magnet]'))
+  var magentLinks = Array.prototype.slice.call($.all('a[href^=magnet]'))
     .map(function(itm) {
       return itm.href;
     });
   var selectedLinks = [];
 
   function addCheckboxs() {
-    Array.prototype.slice.call(document.querySelectorAll('.torrent_name'))
+    Array.prototype.slice.call($.all('.torrent_name'))
       .forEach(function(el) {
         var hash = /info_hash=(.+)(&q=.+)/.exec(el.querySelector('a').href)[1];
         var magnet = magentLinks.filter(function(link) {
