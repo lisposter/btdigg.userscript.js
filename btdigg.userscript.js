@@ -26,14 +26,35 @@
     return document.querySelectorAll(query);
   }
 
+  function Data() {
+    this.el = document.getElementById('magnet-links');
+  }
+
+  Data.prototype.addLinks = function(links) {
+    links = links + this.el.value || '';
+    this.el.value = links;
+    localStorage.setItem('links', links);
+  };
+
+  Data.prototype.loadLinks = function() {
+    this.el.value = localStorage.getItem('links');
+    return localStorage.getItem('links');
+  };
+
+  Data.prototype.resetLinks = function() {
+    this.el.value = '';
+    localStorage.setItem('links', '');
+  };
+
   $('body').innerHTML = $('body').innerHTML +
     '<div id="links-panel">' +
       '<button id="btn-reset"> Reset </button>' +
       '<textarea id="magnet-links" cols="100" rows="10"></textarea>' +
     '</div>';
 
-  var linksBox = document.getElementById('magnet-links');
-  linksBox.value = localStorage.getItem('links') || '';
+
+  var DataService = new Data();
+  DataService.loadLinks();
 
   var magentLinks = Array.prototype.slice.call($.all('a[href^=magnet]'))
     .map(function(itm) {
@@ -58,8 +79,7 @@
           } else {
             selectedLinks.splice(selectedLinks.indexOf(magnet), 1);
           }
-          linksBox.value = (linksBox.value || '') + selectedLinks.join('\n');
-          localStorage.setItem('links', linksBox.value);
+          DataService.addLinks(selectedLinks.join('\n') + '\n');
         });
 
         el.prependChild(ipt);
@@ -69,9 +89,8 @@
   addCheckboxs();
 
 
-  document.getElementById('btn-reset').addEventListener('click', function() {
-    linksBox.value = '';
-    localStorage.setItem('links', '');
+  $('#btn-reset').addEventListener('click', function() {
+    DataService.resetLinks();
   });
 
 })(window, document);
