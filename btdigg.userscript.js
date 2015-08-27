@@ -10,6 +10,7 @@
 
 ;(function(window, document) {
 
+  //////// == helper function
   Node.prototype.prependChild = function(el) {
     if (this.childNodes[0]) {
       this.insertBefore(el, this.childNodes[0]);
@@ -26,6 +27,7 @@
     return document.querySelectorAll(query);
   }
 
+  //////// == Data service
   function Data() {
     this.el = document.getElementById('magnet-links');
   }
@@ -46,14 +48,18 @@
     localStorage.setItem('links', '');
   };
 
+  //////// == main
+
   $('body').innerHTML = $('body').innerHTML +
     '<div id="links-panel">' +
       '<button id="btn-reset"> Reset </button>' +
       '<textarea id="magnet-links" cols="100" rows="10"></textarea>' +
     '</div>';
 
-
+  // init service
   var DataService = new Data();
+
+  // reload links data
   DataService.loadLinks();
 
   var magentLinks = Array.prototype.slice.call($.all('a[href^=magnet]'))
@@ -95,6 +101,8 @@
 
 })(window, document);
 
+
+//////// == style
 GM_addStyle('#links-panel { position: fixed;top: 10%;right: 2%;box-shadow: 0 5px 10px #ddd;border: 1px solid #02a3c6; }');
 GM_addStyle('#btn-reset { position: absolute;top: -20px;height: 20px;border-radius: 0;background: #fff;border: 1px solid #02a3c6;border-bottom: none;left: -1px; }');
 GM_addStyle('#magnet-links { border: 1px solid #f8f8f8;background: rgba(230, 230, 230, .9) }');
