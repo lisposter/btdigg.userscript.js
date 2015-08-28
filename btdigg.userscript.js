@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         btdigg utility
 // @homepageURL  https://github.com/lisposter/btdigg.userscript.js
-// @version      0.1.0
+// @version      0.2.0
 // @description  fast select and copy magnet
 // @author       Leigh Zhu
 // @match        http://btdigg.org/search?*
