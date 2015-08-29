@@ -8,6 +8,17 @@
 // @grant        GM_addStyle
 // ==/UserScript==
 
+function addJQuery(callback) {
+  var script = document.createElement("script");
+  script.setAttribute("src", "//code.jquery.com/jquery-2.1.4.min.js");
+  script.addEventListener('load', function() {
+    var script = document.createElement("script");
+    script.textContent = "window.jQ=jQuery.noConflict(true);(" + callback.toString() + ")();";
+    document.body.appendChild(script);
+  }, false);
+  document.body.appendChild(script);
+}
+
 ;(function(window, document) {
 
   //////// == helper function
