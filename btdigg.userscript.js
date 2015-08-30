@@ -19,98 +19,80 @@ function addJQuery(callback) {
   document.body.appendChild(script);
 }
 
-;(function(window, document) {
-
-  //////// == helper function
-  Node.prototype.prependChild = function(el) {
-    if (this.childNodes[0]) {
-      this.insertBefore(el, this.childNodes[0]);
-    } else {
-      this.appendChild(el);
+function main() {
+  var $ = window.jQ;
+  $(document).ready(function() {
+    //////// == Data service
+    function Data() {
+      this.el = document.getElementById('magnet-links');
     }
-  };
 
-  function $(query) {
-    return document.querySelector(query);
-  }
+    Data.prototype.addLinks = function(links) {
+      links = links + this.loadLinks() || '';
+      this.el.value = links;
+      localStorage.setItem('links', links);
+    };
 
-  $.all = function (query) {
-    return document.querySelectorAll(query);
-  }
+    Data.prototype.loadLinks = function() {
+      this.el.value = localStorage.getItem('links');
+      return localStorage.getItem('links');
+    };
 
-  //////// == Data service
-  function Data() {
-    this.el = document.getElementById('magnet-links');
-  }
+    Data.prototype.resetLinks = function() {
+      this.el.value = '';
+      localStorage.setItem('links', '');
+    };
 
-  Data.prototype.addLinks = function(links) {
-    links = links + this.el.value || '';
-    this.el.value = links;
-    localStorage.setItem('links', links);
-  };
+    //////// == main
 
-  Data.prototype.loadLinks = function() {
-    this.el.value = localStorage.getItem('links');
-    return localStorage.getItem('links');
-  };
+    $('body').append('<div id="links-panel">' +
+        '<button id="btn-reset"> Reset </button>' +
+        '<textarea id="magnet-links" cols="100" rows="10"></textarea>' +
+      '</div>');
 
-  Data.prototype.resetLinks = function() {
-    this.el.value = '';
-    localStorage.setItem('links', '');
-  };
+    // init service
+    var DataService = new Data();
 
-  //////// == main
-
-  $('body').innerHTML = $('body').innerHTML +
-    '<div id="links-panel">' +
-      '<button id="btn-reset"> Reset </button>' +
-      '<textarea id="magnet-links" cols="100" rows="10"></textarea>' +
-    '</div>';
-
-  // init service
-  var DataService = new Data();
-
-  // reload links data
-  DataService.loadLinks();
-
-  var magentLinks = Array.prototype.slice.call($.all('a[href^=magnet]'))
-    .map(function(itm) {
-      return itm.href;
-    });
-  var selectedLinks = [];
-
-  function addCheckboxs() {
-    Array.prototype.slice.call($.all('.torrent_name'))
-      .forEach(function(el) {
-        var hash = /info_hash=(.+)(&q=.+)/.exec(el.querySelector('a').href)[1];
-        var magnet = magentLinks.filter(function(link) {
-          return link.indexOf(hash) >= 0;
-        })[0];
-
-        var ipt = document.createElement('input');
-        ipt.setAttribute('type', 'checkbox');
-        ipt.setAttribute('class', 'checkbox');
-        ipt.addEventListener('change', function(e) {
-          if (e.target.checked === true) {
-            selectedLinks.push(magnet);
-          } else {
-            selectedLinks.splice(selectedLinks.indexOf(magnet), 1);
-          }
-          DataService.addLinks(selectedLinks.join('\n') + '\n');
-        });
-
-        el.prependChild(ipt);
+    // reload links data
+    DataService.loadLinks();
+    var magentLinks = $.makeArray($('a[href^=magnet]'))
+      .map(function(itm) {
+        return itm.href;
       });
-  }
+    var selectedLinks = [];
 
-  addCheckboxs();
+    function addCheckboxs() {
+      $('.torrent_name a')
+        .each(function() {
+          console.log($(this));
+          var hash = /info_hash=(.+)(&q=.+)/.exec($(this).attr('href'))[1];
+          var magnet = magentLinks.filter(function(link) {
+            return link.indexOf(hash) >= 0;
+          })[0];
 
+          var ipt = $('<input type="checkbox" />');
+          ipt.change(function() {
+            if ($(this).prop('checked')) {
+              selectedLinks.push(magnet);
+            } else {
+              selectedLinks.splice(selectedLinks.indexOf(magnet), 1);
+            }
+            DataService.addLinks(selectedLinks.join('\n') + '\n');
+          })
+          $(this).prepend(ipt);
+        });
+    }
 
-  $('#btn-reset').addEventListener('click', function() {
-    DataService.resetLinks();
-  });
+    addCheckboxs();
 
-})(window, document);
+    $('#btn-reset').click(function() {
+      DataService.resetLinks();
+    });
+  })
+
+}
+
+addJQuery(main);
 
 
 //////// == style
