@@ -21,7 +21,9 @@ function addJQuery(callback) {
 
 function main() {
   var $ = window.jQ;
+
   $(document).ready(function() {
+
     //////// == Data service
     function Data() {
       this.el = document.getElementById('magnet-links');
@@ -44,7 +46,6 @@ function main() {
     };
 
     //////// == main
-
     $('body').append('<div id="links-panel">' +
         '<button id="btn-reset"> Reset </button>' +
         '<textarea id="magnet-links" cols="100" rows="10"></textarea>' +
@@ -64,7 +65,6 @@ function main() {
     function addCheckboxs() {
       $('.torrent_name a')
         .each(function() {
-          console.log($(this));
           var hash = /info_hash=(.+)(&q=.+)/.exec($(this).attr('href'))[1];
           var magnet = magentLinks.filter(function(link) {
             return link.indexOf(hash) >= 0;
@@ -85,15 +85,17 @@ function main() {
 
     addCheckboxs();
 
+    // reset data button
     $('#btn-reset').click(function() {
       DataService.resetLinks();
     });
+
   })
 
 }
 
+// init
 addJQuery(main);
-
 
 //////// == style
 GM_addStyle('#links-panel { position: fixed;top: 10%;right: 2%;box-shadow: 0 5px 10px #ddd;border: 1px solid #02a3c6; }');
