@@ -30,7 +30,6 @@ function main() {
     }
 
     Data.prototype.addLinks = function(links) {
-      links = links + this.loadLinks() || '';
       this.el.value = links;
       localStorage.setItem('links', links);
     };
@@ -60,7 +59,7 @@ function main() {
       .map(function(itm) {
         return itm.href;
       });
-    var selectedLinks = [];
+    var selectedLinks = DataService.loadLinks().split('/n') || [];
 
     function addCheckboxs() {
       $('.torrent_name a')
