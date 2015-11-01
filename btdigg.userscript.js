@@ -59,7 +59,7 @@ function main() {
       .map(function(itm) {
         return itm.href;
       });
-    var selectedLinks = DataService.loadLinks().split('/n') || [];
+    var selectedLinks = DataService.loadLinks().split('/n') ? DataService.loadLinks().split('/n') : [];
 
     function addCheckboxs() {
       $('.torrent_name a')
